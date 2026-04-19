@@ -12,4 +12,8 @@ public enum Language: String, CaseIterable {
   case enUS = "en-us"
   /// GB English (British English).
   case enGB = "en-gb"
+  /// Slovak (VoxoLoxo fork extension).
+  case skSK = "sk-sk"
+  /// Czech (VoxoLoxo fork extension).
+  case csCZ = "cs-cz"
 }

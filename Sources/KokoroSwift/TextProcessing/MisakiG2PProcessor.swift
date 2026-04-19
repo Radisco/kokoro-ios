@@ -24,6 +24,11 @@ final class MisakiG2PProcessor : G2PProcessor {
       misaki = EnglishG2P(british: false)
     case .enGB:
       misaki = EnglishG2P(british: true)
+    case .skSK, .csCZ:
+      // VoxoLoxo fork: Misaki nepodporuje SK/CZ natívne — dočasne použijeme EN
+      // ako fallback (výstup bude znieť ako anglická fonetika Slovaciek slov).
+      // Reálna SK/CZ výslovnosť príde s eSpeakNG integráciou v ďalšej fáze.
+      misaki = EnglishG2P(british: false)
     default:
       throw G2PProcessorError.unsupportedLanguage
     }

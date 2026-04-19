@@ -144,24 +144,28 @@ struct KokoroConfig: Decodable {
     case vocab = "vocab"
   }
     
-  /// Loads the configuration from the bundled config.json file.
+  /// Loads the configuration from either a custom URL or the bundled default.
   ///
-  /// This method reads the configuration file from the module's Resources directory,
-  /// parses it as JSON, and caches the result for future use.
-  ///
+  /// - Parameter customURL: optional path to a custom config.json file. If nil,
+  ///   falls back to the Bundle.module Resources/config.json.
   /// - Returns: Parsed KokoroConfig instance
   /// - Note: Uses forced unwrapping (try!) as configuration loading is critical
   ///         and should fail fast if the file is missing or malformed
-  nonisolated static func loadConfig() -> KokoroConfig {
-    // Locate config.json in the module bundle
-    let fileURL = Bundle.module.url(forResource: "config", withExtension: "json", subdirectory: "Resources")!
-    
+  nonisolated static func loadConfig(from customURL: URL? = nil) -> KokoroConfig {
+    // Locate config.json — custom path (VoxoLoxo fork) or bundle default
+    let fileURL: URL
+    if let customURL = customURL {
+      fileURL = customURL
+    } else {
+      fileURL = Bundle.module.url(forResource: "config", withExtension: "json", subdirectory: "Resources")!
+    }
+
     // Read file contents
     let configJSON = try! String(contentsOf: fileURL, encoding: .utf8)
-    
+
     // Parse JSON and cache the result
     KokoroConfig.config = try! JSONDecoder().decode(KokoroConfig.self, from: configJSON.data(using: .utf8)!)
-    
+
     return KokoroConfig.config!
   }
 }

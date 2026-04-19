@@ -63,10 +63,21 @@ public final class KokoroTTS {
   /// - Parameters:
   ///   - modelPath: URL to the directory containing model weights
   ///   - g2p: Grapheme-to-phoneme processor type (default: Misaki)
-  public init(modelPath: URL, g2p: G2P = .misaki) {
+  ///   - configPath: optional URL to a custom config.json (VoxoLoxo fork: overrides Bundle.module default)
+  public init(modelPath: URL, g2p: G2P = .misaki, configPath: URL? = nil) {
     // Load and sanitize model weights
     let sanitizedWeights = WeightLoader.loadWeights(modelPath: modelPath)
-    let config = KokoroConfig.loadConfig()
+
+    // VoxoLoxo fork: prefer explicit configPath, then modelPath/config.json, finally Bundle.module default.
+    let resolvedConfigURL: URL?
+    if let configPath = configPath {
+      resolvedConfigURL = configPath
+    } else {
+      let implicitPath = modelPath.appendingPathComponent("config.json")
+      resolvedConfigURL = FileManager.default.fileExists(atPath: implicitPath.path) ? implicitPath : nil
+    }
+
+    let config = KokoroConfig.loadConfig(from: resolvedConfigURL)
     
     // Initialize BERT model for phoneme encoding
     bert = CustomAlbert(
