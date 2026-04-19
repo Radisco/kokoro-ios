@@ -11,16 +11,12 @@ let package = Package(
   products: [
     .library(
       name: "KokoroSwift",
-      // VoxoLoxo fork: odstránené .dynamic — default static linking.
-      // Dôvod: AUv3 extension target v Xcode SPM-dynamic libs
-      // nevloží do .appex bundlu bez explicit Embed Frameworks phase,
-      // čo spôsobí dyld load error pri spúšťaní extensie.
+      type: .dynamic,
       targets: ["KokoroSwift"]
     ),
   ],
   dependencies: [
-    // VoxoLoxo fork: používa Radisco/mlx-swift voxo-static branch (static libs pre AUv3)
-    .package(url: "https://github.com/Radisco/mlx-swift", branch: "voxo-static"),
+    .package(url: "https://github.com/ml-explore/mlx-swift", exact: "0.30.2"),
     // .package(url: "https://github.com/mlalma/eSpeakNGSwift", from: "1.0.1"),
     .package(url: "https://github.com/mlalma/MisakiSwift", exact: "1.0.6"),
     .package(url: "https://github.com/mlalma/MLXUtilsLibrary.git", exact: "0.0.6")
