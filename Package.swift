@@ -11,7 +11,10 @@ let package = Package(
   products: [
     .library(
       name: "KokoroSwift",
-      type: .dynamic,
+      // VoxoLoxo fork: odstránené .dynamic — default static linking.
+      // Dôvod: AUv3 extension target v Xcode SPM-dynamic libs
+      // nevloží do .appex bundlu bez explicit Embed Frameworks phase,
+      // čo spôsobí dyld load error pri spúšťaní extensie.
       targets: ["KokoroSwift"]
     ),
   ],
