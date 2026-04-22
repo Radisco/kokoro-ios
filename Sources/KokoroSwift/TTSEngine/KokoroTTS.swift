@@ -54,11 +54,22 @@ public final class KokoroTTS {
   private let decoder: Decoder!
   
   /// Grapheme-to-phoneme processor for text conversion
-  private let g2pProcessor: G2PProcessor?
+  /// (VoxoLoxo fork: var + internal so convenience init can override for custom G2P)
+  internal var g2pProcessor: G2PProcessor?
   
   /// Currently active language (cached to avoid reinitializing G2P)
   private var chosenLanguage: Language = .none
   
+  /// Initializes the Kokoro TTS engine with a custom G2P processor (VoxoLoxo fork extension).
+  /// - Parameters:
+  ///   - modelPath: URL to the directory containing model weights
+  ///   - g2pProcessor: Custom `G2PProcessor` instance (e.g. `CzechG2PProcessor`)
+  ///   - configPath: optional URL to a custom config.json
+  public convenience init(modelPath: URL, g2pProcessor: G2PProcessor, configPath: URL? = nil) {
+    self.init(modelPath: modelPath, g2p: .misaki, configPath: configPath)
+    self.g2pProcessor = g2pProcessor
+  }
+
   /// Initializes the Kokoro TTS engine with model weights and G2P processor.
   /// - Parameters:
   ///   - modelPath: URL to the directory containing model weights
